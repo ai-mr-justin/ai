@@ -1582,87 +1582,91 @@
     }
 
 
+
     /* =========================================================
-       APP NAVIGATION — compact, ChatGPT-like
+       MORE MENU — compact sidebar toggle
        ========================================================= */
 
-    .app-nav {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
+    .more-menu-wrap {
+      position: relative;
     }
 
-    .app-nav-title {
-      padding: 7px 10px;
-      color: #8e8e8e;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-    }
-
-    .app-nav-link {
+    .more-menu-btn {
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 10px;
       width: 100%;
-      min-height: 36px;
-      padding: 8px 10px;
+      min-height: 38px;
+      padding: 9px 9px;
+      margin-bottom: 5px;
       border-radius: 8px;
-      color: #cfcfcf;
-      text-decoration: none;
+      background: transparent;
+      color: #aaa;
+      cursor: pointer;
+      text-align: left;
       font-size: 13px;
-      transition: background .15s ease, color .15s ease;
     }
 
-    .app-nav-link:hover {
+    .more-menu-btn:hover,
+    .more-menu-btn[aria-expanded="true"] {
       background: var(--sidebar-hover);
-      color: #fff;
+      color: #eee;
     }
 
-    .app-nav-icon {
+    .more-menu-icon {
       width: 18px;
-      flex: 0 0 18px;
-      color: #8f8f8f;
       text-align: center;
-      font-size: 14px;
+      color: #999;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
 
-    .app-nav-link:hover .app-nav-icon {
-      color: #d8d8d8;
+    .more-menu-btn span:nth-child(2) {
+      flex: 1;
     }
 
-    .app-nav-link.active {
-      background: #2a2a2a;
-      color: #fff;
+    .more-menu-chevron {
+      color: #777;
+      font-size: 15px;
+      transition: transform .15s ease;
     }
 
-    .app-nav-link.active .app-nav-icon {
-      color: #fff;
+    .more-menu-btn[aria-expanded="true"] .more-menu-chevron {
+      transform: rotate(180deg);
     }
 
-    .sidebar-footer .sidebar-info {
-      margin-top: 8px;
+    .more-menu {
+      margin: 0 0 8px;
+      padding: 4px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #202020;
+      box-shadow: 0 12px 30px rgba(0,0,0,.28);
     }
 
+    .more-menu[hidden] {
+      display: none;
+    }
 
-    .sidebar-legal {
+    .more-menu a {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 0 9px 2px;
-      color: #666;
-      font-size: 10px;
-    }
-
-    .sidebar-legal a {
-      color: #777;
+      gap: 10px;
+      min-height: 34px;
+      padding: 7px 8px;
+      border-radius: 7px;
+      color: #bbb;
       text-decoration: none;
+      font-size: 12px;
     }
 
-    .sidebar-legal a:hover {
-      color: #aaa;
-      text-decoration: underline;
+    .more-menu a:hover {
+      background: #303030;
+      color: #fff;
+    }
+
+    .more-menu a:first-letter {
+      color: #999;
     }
 
     /* =========================================================
@@ -1749,38 +1753,34 @@
       ></div>
 
 
-        <nav class="app-nav" aria-label="Informasi AI Mr Justin">
-          <div class="app-nav-title">AI Mr Justin</div>
 
-          <a class="app-nav-link" href="/about.html">
-            <span class="app-nav-icon">ⓘ</span>
-            <span>About</span>
-          </a>
-
-          <a class="app-nav-link" href="/documentation.html">
-            <span class="app-nav-icon">▤</span>
-            <span>Documentation</span>
-          </a>
-
-          <a class="app-nav-link" href="/faq.html">
-            <span class="app-nav-icon">?</span>
-            <span>FAQ</span>
-          </a>
-
-          <a class="app-nav-link" href="/changelog.html">
-            <span class="app-nav-icon">↗</span>
-            <span>Changelog</span>
-          </a>
-        </nav>
 
       <div class="sidebar-footer">
 
 
-          <div class="sidebar-legal">
-            <a href="/privacy.html">Privacy</a>
-            <span>·</span>
-            <a href="/terms.html">Terms</a>
-          </div>
+
+
+
+        <button
+          id="more-menu-btn"
+          class="more-menu-btn"
+          type="button"
+          aria-expanded="false"
+          aria-controls="more-menu"
+        >
+          <span class="more-menu-icon">•••</span>
+          <span>Menu</span>
+          <span class="more-menu-chevron">⌄</span>
+        </button>
+
+        <div id="more-menu" class="more-menu" hidden>
+          <a href="/about.html">ⓘ <span>About</span></a>
+          <a href="/documentation.html">▤ <span>Documentation</span></a>
+          <a href="/faq.html">? <span>FAQ</span></a>
+          <a href="/changelog.html">↗ <span>Changelog</span></a>
+          <a href="/privacy.html">⌕ <span>Privacy</span></a>
+          <a href="/terms.html">✓ <span>Terms</span></a>
+        </div>
 
         <div class="sidebar-info">
           <div class="sidebar-info-logo">
@@ -2119,6 +2119,38 @@
     </div>
 
   </div>
+
+
+  <script>
+    (() => {
+      const button = document.getElementById("more-menu-btn");
+      const menu = document.getElementById("more-menu");
+
+      if (!button || !menu) return;
+
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const isOpen = button.getAttribute("aria-expanded") === "true";
+        button.setAttribute("aria-expanded", String(!isOpen));
+        menu.hidden = isOpen;
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!menu.hidden && !menu.contains(event.target) && event.target !== button) {
+          menu.hidden = true;
+          button.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !menu.hidden) {
+          menu.hidden = true;
+          button.setAttribute("aria-expanded", "false");
+          button.focus();
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>
