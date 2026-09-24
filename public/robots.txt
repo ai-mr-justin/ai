@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ai.mr-justin.workers.dev/sitemap.xml
